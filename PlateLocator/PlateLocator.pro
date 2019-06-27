@@ -31,7 +31,8 @@ SOURCES += \
         platelocator.cpp \
         platelocator_v3.cpp \
         saveimgthread.cpp \
-        saveimgwidget.cpp
+        saveimgwidget.cpp \
+        showplatethread.cpp
 
 HEADERS += \
         matswitch.h \
@@ -40,7 +41,8 @@ HEADERS += \
         platelocator.h \
         platelocator_v3.h \
         saveimgthread.h \
-        saveimgwidget.h
+        saveimgwidget.h \
+        showplatethread.h
 
 FORMS += \
         platelocator.ui \

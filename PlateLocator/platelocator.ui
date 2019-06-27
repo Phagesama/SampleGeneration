@@ -24,7 +24,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="cutTab">
        <attribute name="title">
@@ -815,7 +815,7 @@
           <item>
            <widget class="QPushButton" name="simpleXML">
             <property name="text">
-             <string>生成简单XML</string>
+             <string>生成XML并识别</string>
             </property>
            </widget>
           </item>
@@ -1026,6 +1026,121 @@
            </widget>
           </item>
          </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="cuttab">
+       <attribute name="title">
+        <string>字符切割</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_10">
+        <item>
+         <layout class="QHBoxLayout" name="cutTabToolBarLayout" stretch="1,1,8">
+          <item>
+           <widget class="QPushButton" name="selectsourceplateButton">
+            <property name="text">
+             <string>选择原始数据</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="autoCharButton">
+            <property name="text">
+             <string>自动切割并保存</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="masklabel_2">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="cutTabMainLayout">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>10</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <widget class="QListWidget" name="plateList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>2</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+          </widget>
+          <widget class="QSplitter" name="charsegmentLayout">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>8</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QTabWidget" name="plateImgTab">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="plate">
+             <attribute name="title">
+              <string>车牌原图</string>
+             </attribute>
+            </widget>
+           </widget>
+           <widget class="QListWidget" name="charList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+           </widget>
+           <widget class="QScrollArea" name="charsegmentOptimization">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="charsegmentOptimizationContents">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>606</width>
+               <height>69</height>
+              </rect>
+             </property>
+            </widget>
+           </widget>
+          </widget>
+         </widget>
         </item>
        </layout>
       </widget>

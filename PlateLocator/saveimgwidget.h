@@ -13,6 +13,7 @@ class SaveImgWidget : public QWidget
     Q_OBJECT
 private slots:
     void updateProgress(int present);
+
     void threadFinished();
 
     void on_CancelButton_clicked();

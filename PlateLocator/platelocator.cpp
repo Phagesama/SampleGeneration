@@ -81,24 +81,25 @@ void PlateLocator::showCutedImage()
 void PlateLocator::showSourcePlate()
 {
     QString classPath = savePath + "/plates/" + ui->showClass->currentText();
-    QDir* classdir = new QDir(classPath);
-    QStringList nameFilters;
-    nameFilters << "*.jpg" << "*.png" << "*.bmp";
-    QStringList sourcePlateNames = classdir->entryList(nameFilters);
     ui->resList->clear();
     ui->resList->setIconSize(QSize(180,80));
-    int sourcePlateCount = sourcePlateNames.size();
-    for (int i = 0;i < sourcePlateCount;i++)
+    if (showPlateThread != nullptr)
     {
-        QString platePath = classPath + "/" + sourcePlateNames[i];
-        QPixmap platepm = QPixmap(platePath).scaled(180,80);
-        QListWidgetItem *item = new QListWidgetItem(QIcon(platepm),"");
-        item->setWhatsThis(sourcePlateNames[i]);
-        QCheckBox *platecb = new QCheckBox();
-        platecb->setCheckable(true);
-        ui->resList->addItem(item);
-        ui->resList->setItemWidget(item,platecb);
+        showPlateThread->terminate();
+        showPlateThread->destroyed();
     }
+    showPlateThread = new ShowPlateThread();
+    connect(showPlateThread,&ShowPlateThread::getPixmap,this,&PlateLocator::updateResList);
+    showPlateThread->init(classPath);
+    showPlateThread->start();
+}
+
+void PlateLocator::updateResList(QListWidgetItem *item)
+{
+    QCheckBox *platecb = new QCheckBox();
+    platecb->setCheckable(true);
+    ui->resList->addItem(item);
+    ui->resList->setItemWidget(item,platecb);
 }
 
 void PlateLocator::on_inputButton_clicked()
@@ -321,7 +322,8 @@ void PlateLocator::on_checkBox_stateChanged(int arg1)
 void PlateLocator::on_moveButton_clicked()
 {
     int count = ui->resList->count();
-    for (int i = 0;i < count;i++)
+    int i = 0;
+    while(i < count)
     {
         QListWidgetItem *item = ui->resList->item(i);
         QWidget *widget = ui->resList->itemWidget(item);
@@ -334,14 +336,18 @@ void PlateLocator::on_moveButton_clicked()
             QFile::copy(filename,aimPath);
             QDir classdir = QDir(classPath);
             classdir.remove(filename);
+            delete item;
+            count--;
+        }else
+        {
+            i++;
         }
     }
-    showSourcePlate();
 }
 
 void PlateLocator::on_autoClassify_clicked()
 {
-    QString XMLPath = QFileDialog::getOpenFileName(this, "选择XML文件路径", "E:/");
+    QString XMLPath = QFileDialog::getOpenFileName(this, "选择XML文件路径", "E:/", "*.xml");
     if (XMLPath.isEmpty())
         return;
     PlateCategory_SVM::Load(XMLPath);
@@ -372,5 +378,70 @@ void PlateLocator::on_centralTab_tabBarClicked(int index)
 
 void PlateLocator::on_simpleXML_clicked()
 {
+    QStringList nameFilters;
+    nameFilters << "*.jpg" << "*.png" << "*.bmp";
 
+    QString notpath = savePath + "/plates/非车牌";
+    QDir* dir = new QDir(notpath);
+    QStringList notimgFileNames = dir->entryList(nameFilters);
+    QString genpath = savePath + "/plates/普通车牌";
+    dir = new QDir(genpath);
+    QStringList genimgFileNames = dir->entryList(nameFilters);
+    int imgcount = notimgFileNames.size() + genimgFileNames.size();
+
+    cv::Mat mat;
+    std::vector<float> descriptor;
+    cv::Mat descriptorMat = cv::Mat::zeros(imgcount, 1188, CV_32FC1);
+    int *label = (int *)malloc(sizeof(int)*imgcount);
+
+    int i = 0;
+    for (QString imgFileName : notimgFileNames)
+    {
+        QString filePath = notpath + "/" + imgFileName;
+        std::string str = filePath.toLocal8Bit().toStdString();
+        mat = cv::imread(str, cv::ImreadModes::IMREAD_GRAYSCALE);
+        descriptor = PlateCategory_SVM::ComputeHogDescriptors(mat);
+        for(int j = 0; j < 1188; j++)
+        {
+            descriptorMat.at<float>(i, j) = descriptor.at(j);
+        }
+        label[i] = 0;
+        i++;
+    }
+    for (QString imgFileName : genimgFileNames)
+    {
+        QString filePath = genpath + "/" + imgFileName;
+        std::string str = filePath.toLocal8Bit().toStdString();
+        mat = cv::imread(str, cv::ImreadModes::IMREAD_GRAYSCALE);
+
+        descriptor = PlateCategory_SVM::ComputeHogDescriptors(mat);
+        for(int j = 0; j < 1188; j++)
+        {
+            descriptorMat.at<float>(i, j) = descriptor.at(j);
+        }
+        label[i] = 1;
+        i++;
+    }
+    cv::Mat labelMat = cv::Mat(imgcount, 1, CV_32SC1, label);
+    PlateCategory_SVM::Train(descriptorMat, labelMat);
+
+    QString xmlSavePath = QFileDialog::getSaveFileName(this,"请选择XML保存路径","E:/简单XML.xml","*.xml");
+    PlateCategory_SVM::Save(xmlSavePath);
+
+    PlateCategory_SVM::Load(xmlSavePath);
+    QString classPath = savePath + "/plates/未识别";
+    QDir* classdir = new QDir(classPath);
+    QStringList sourcePlateNames = classdir->entryList(nameFilters);
+    for (QString sourcePlateName : sourcePlateNames)
+    {
+        QString sourcePlatePath = classPath + "/" + sourcePlateName;
+        std::string str = sourcePlatePath.toLocal8Bit().toStdString();
+        cv::Mat sourcePlate = cv::imread(str);
+        QString platecate = PlateCategoryString[PlateCategory_SVM::Test(sourcePlate)];
+        QString aimPath = savePath + "/plates/" + platecate + "/" + sourcePlateName;
+        QFile::copy(sourcePlatePath,aimPath);
+        classdir->remove(sourcePlatePath);
+    }
+    ui->fileList->setCurrentRow(0);
+    showSourcePlate();
 }

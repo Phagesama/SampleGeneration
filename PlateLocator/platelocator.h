@@ -12,6 +12,7 @@
 #include "platelocator_v3.h"
 #include "matswitch.h"
 #include "saveimgwidget.h"
+#include "showplatethread.h"
 
 namespace Ui {
 class PlateLocator;
@@ -26,6 +27,8 @@ public:
     ~PlateLocator();
 
 private slots:
+    void updateResList(QListWidgetItem *item);
+
     void on_inputButton_clicked();
 
     void on_fileList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
@@ -131,6 +134,7 @@ public:
     int yellowup_S = 255;
     int yellowup_V = 255;
     SaveImgWidget *saveImgWidget;
+    ShowPlateThread *showPlateThread = nullptr;
 
 private:
     Ui::PlateLocator *ui;
