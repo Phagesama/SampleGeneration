@@ -1,0 +1,1059 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>PlateLocator</class>
+ <widget class="QMainWindow" name="PlateLocator">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>993</width>
+    <height>658</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>PlateLocator</string>
+  </property>
+  <widget class="QWidget" name="centralWidget">
+   <layout class="QHBoxLayout" name="horizontalLayout_4">
+    <item>
+     <widget class="QTabWidget" name="centralTab">
+      <property name="tabPosition">
+       <enum>QTabWidget::North</enum>
+      </property>
+      <property name="tabShape">
+       <enum>QTabWidget::Rounded</enum>
+      </property>
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="cutTab">
+       <attribute name="title">
+        <string>车牌切割</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_2">
+        <item>
+         <layout class="QHBoxLayout" name="cutTabLayout" stretch="1,1,8">
+          <item>
+           <widget class="QPushButton" name="inputButton">
+            <property name="text">
+             <string>选择原始数据</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="outputButton">
+            <property name="text">
+             <string>自动切割并保存</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="masklabel">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QSplitter" name="cutMainWindow">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>20</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="childrenCollapsible">
+           <bool>false</bool>
+          </property>
+          <widget class="QListWidget" name="fileList">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>2</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
+          <widget class="QSplitter" name="cutTabImgWindow">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+             <horstretch>8</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <widget class="QTabWidget" name="mainImageTab">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>9</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentIndex">
+             <number>0</number>
+            </property>
+            <widget class="QWidget" name="sourceImg">
+             <attribute name="title">
+              <string>原图</string>
+             </attribute>
+             <layout class="QHBoxLayout" name="horizontalLayout">
+              <item>
+               <widget class="QLabel" name="sourceImgLabel">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+            <widget class="QWidget" name="processImg">
+             <attribute name="title">
+              <string>车牌蒙板</string>
+             </attribute>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QLabel" name="processImgLabel">
+                <property name="text">
+                 <string/>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </widget>
+           <widget class="QListWidget" name="cuttedImgList">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+              <horstretch>0</horstretch>
+              <verstretch>1</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="flow">
+             <enum>QListView::LeftToRight</enum>
+            </property>
+           </widget>
+          </widget>
+          <widget class="QScrollArea" name="paraOptimization">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+             <horstretch>2</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>200</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="widgetResizable">
+            <bool>true</bool>
+           </property>
+           <widget class="QWidget" name="paraOptimizationContents">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>181</width>
+              <height>976</height>
+             </rect>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <item>
+              <widget class="QGroupBox" name="blurBox">
+               <property name="title">
+                <string>高斯模糊</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_4">
+                <item>
+                 <layout class="QHBoxLayout" name="blur_SizeLayout">
+                  <item>
+                   <widget class="QLabel" name="blur_SizeLabel">
+                    <property name="text">
+                     <string>高斯模糊半径</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="blur_Size">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>2</number>
+                    </property>
+                    <property name="value">
+                     <number>5</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="blueBox">
+               <property name="title">
+                <string>蓝色颜色范围</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_5">
+                <item>
+                 <widget class="QLabel" name="bluelowLabel">
+                  <property name="text">
+                   <string>下限：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="bluelow_HLayout">
+                  <item>
+                   <widget class="QLabel" name="bluelow_HLabel">
+                    <property name="text">
+                     <string>H：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="bluelow_H">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>100</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="bluelow_SLayout">
+                  <item>
+                   <widget class="QLabel" name="bluelow_SLabel">
+                    <property name="text">
+                     <string>S：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="bluelow_S">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>70</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="bluelow_VLayout">
+                  <item>
+                   <widget class="QLabel" name="bluelow_VLabel">
+                    <property name="text">
+                     <string>V：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="bluelow_V">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>70</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QLabel" name="blueupLabel">
+                  <property name="text">
+                   <string>上限：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="blueup_HLayout">
+                  <item>
+                   <widget class="QLabel" name="blueup_HLabel">
+                    <property name="text">
+                     <string>H：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="blueup_H">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>140</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="blueup_SLayout">
+                  <item>
+                   <widget class="QLabel" name="blueup_SLabel">
+                    <property name="text">
+                     <string>S：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="blueup_S">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="blueup_VLayout">
+                  <item>
+                   <widget class="QLabel" name="blueup_VLabel">
+                    <property name="text">
+                     <string>V：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="blueup_V">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="yellowBox">
+               <property name="title">
+                <string>黄色颜色范围</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QLabel" name="yellowlowLabel">
+                  <property name="text">
+                   <string>下限：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowlow_HLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowlow_HLabel">
+                    <property name="text">
+                     <string>H：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowlow_H">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>15</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowlow_SLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowlow_SLabel">
+                    <property name="text">
+                     <string>S：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowlow_S">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>70</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowlow_VLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowlow_VLabel">
+                    <property name="text">
+                     <string>V：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowlow_V">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>70</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QLabel" name="yellowupLabel">
+                  <property name="text">
+                   <string>上限：</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowup_HLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowup_HLabel">
+                    <property name="text">
+                     <string>H：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowup_H">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>40</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowup_SLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowup_SLabel">
+                    <property name="text">
+                     <string>S：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowup_S">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="yellowup_VLayout">
+                  <item>
+                   <widget class="QLabel" name="yellowup_VLabel">
+                    <property name="text">
+                     <string>V：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="yellowup_V">
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>255</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="sobelBox">
+               <property name="title">
+                <string>Sobel参数</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <layout class="QHBoxLayout" name="sobel_ScaleLayout">
+                  <item>
+                   <widget class="QLabel" name="sobel_ScaleLabel">
+                    <property name="text">
+                     <string>Scale：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sobel_Scale">
+                    <property name="maximum">
+                     <number>1</number>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="sobel_DeltaLayout">
+                  <item>
+                   <widget class="QLabel" name="sobel_DeltaLabel">
+                    <property name="text">
+                     <string>Delta：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sobel_Delta">
+                    <property name="maximum">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="sobel_X_WeightLayout">
+                  <item>
+                   <widget class="QLabel" name="sobel_X_WeightLabel">
+                    <property name="text">
+                     <string>X轴方向权重：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sobel_X_Weight">
+                    <property name="maximum">
+                     <number>1</number>
+                    </property>
+                    <property name="value">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="sobel_Y_WeightLayout">
+                  <item>
+                   <widget class="QLabel" name="sobel_Y_WeightLabel">
+                    <property name="text">
+                     <string>Y轴方向权重：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="sobel_Y_Weight">
+                    <property name="maximum">
+                     <number>1</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="closeBox">
+               <property name="title">
+                <string>闭操作参数</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_8">
+                <item>
+                 <layout class="QHBoxLayout" name="morph_Size_WidthLayout">
+                  <item>
+                   <widget class="QLabel" name="morph_Size_WidthLabel">
+                    <property name="text">
+                     <string>核宽：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="morph_SIze_Width">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>17</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="morph_Size_HeightLayout">
+                  <item>
+                   <widget class="QLabel" name="morph_Size_HeightLabel">
+                    <property name="text">
+                     <string>核高：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="morph_Size_Height">
+                    <property name="minimum">
+                     <number>1</number>
+                    </property>
+                    <property name="maximum">
+                     <number>255</number>
+                    </property>
+                    <property name="value">
+                     <number>3</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QGroupBox" name="whrBox">
+               <property name="title">
+                <string>宽/高/宽高比</string>
+               </property>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <layout class="QHBoxLayout" name="minWidthLayout">
+                  <item>
+                   <widget class="QLabel" name="minWidthLabel">
+                    <property name="text">
+                     <string>最小宽度：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="minWidth">
+                    <property name="maximum">
+                     <number>1000</number>
+                    </property>
+                    <property name="value">
+                     <number>60</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="maxWidthLayout">
+                  <item>
+                   <widget class="QLabel" name="maxWidthLabel">
+                    <property name="text">
+                     <string>最大宽度：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="maxWidth">
+                    <property name="maximum">
+                     <number>1000</number>
+                    </property>
+                    <property name="value">
+                     <number>180</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="minHeightLayout">
+                  <item>
+                   <widget class="QLabel" name="minHeightLabel">
+                    <property name="text">
+                     <string>最小高度：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="minHeight">
+                    <property name="maximum">
+                     <number>1000</number>
+                    </property>
+                    <property name="value">
+                     <number>18</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="maxHeightLayout">
+                  <item>
+                   <widget class="QLabel" name="maxHeightLabel">
+                    <property name="text">
+                     <string>最大高度：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSpinBox" name="maxHeight">
+                    <property name="maximum">
+                     <number>1000</number>
+                    </property>
+                    <property name="value">
+                     <number>80</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="minRatioLayout">
+                  <item>
+                   <widget class="QLabel" name="minRatioLabel">
+                    <property name="text">
+                     <string>最小宽高比：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="minRatio">
+                    <property name="maximum">
+                     <double>10.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.150000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="maxRatioLayout">
+                  <item>
+                   <widget class="QLabel" name="maxRatioLabel">
+                    <property name="text">
+                     <string>最大宽高比：</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QDoubleSpinBox" name="maxRatio">
+                    <property name="maximum">
+                     <double>10.000000000000000</double>
+                    </property>
+                    <property name="value">
+                     <double>0.700000000000000</double>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </widget>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="classifyTab">
+       <attribute name="title">
+        <string>车牌分类</string>
+       </attribute>
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <item>
+         <layout class="QHBoxLayout" name="classifyTabTobLayout" stretch="1,1,1,5">
+          <item>
+           <widget class="QPushButton" name="sourcePlate">
+            <property name="text">
+             <string>选择文件路径</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="autoClassify">
+            <property name="text">
+             <string>自动识别</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="simpleXML">
+            <property name="text">
+             <string>生成简单XML</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="showClass">
+            <item>
+             <property name="text">
+              <string>未识别</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>非车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>普通车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>普通车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>内集车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌_内</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌_内</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>警牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>军牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>军牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>新能源</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <widget class="QListWidget" name="resList">
+          <property name="flow">
+           <enum>QListView::LeftToRight</enum>
+          </property>
+          <property name="isWrapping" stdset="0">
+           <bool>true</bool>
+          </property>
+          <property name="resizeMode">
+           <enum>QListView::Adjust</enum>
+          </property>
+          <property name="layoutMode">
+           <enum>QListView::SinglePass</enum>
+          </property>
+          <property name="viewMode">
+           <enum>QListView::IconMode</enum>
+          </property>
+          <property name="batchSize">
+           <number>100</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <layout class="QHBoxLayout" name="classifyTabBottomLayout" stretch="1,1,12,2">
+          <item>
+           <widget class="QCheckBox" name="checkBox">
+            <property name="text">
+             <string>全选</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="moveLabel">
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
+            <property name="text">
+             <string>移动至：</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="aimClass">
+            <item>
+             <property name="text">
+              <string>非车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>普通车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>普通车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>内集车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌_内</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>澳门车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌_内</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>香港车牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>警牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>军牌</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>军牌_两行</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>新能源</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="moveButton">
+            <property name="text">
+             <string>移动</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>993</width>
+     <height>23</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
