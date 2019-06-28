@@ -139,7 +139,8 @@ enum PlateChar
     贵 = 69,
     云 = 70,
     川 = 71,
-    警 = 72
+    警 = 72,
+    未识别字符 = 73
 };
 
 const QList<QString> PlateCharString
@@ -216,7 +217,8 @@ const QList<QString> PlateCharString
     "贵",
     "云",
     "川",
-    "警"
+    "警",
+    "未识别字符"
 };
 
 enum PlateLocateMethod

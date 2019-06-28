@@ -99,6 +99,8 @@ private slots:
 
     void on_simpleXML_clicked();
 
+    void on_selectsourceplateButton_clicked();
+
 private:
     void updatapara();
     void showCutedImage();
@@ -108,6 +110,9 @@ public:
     QString rootPath;
     QString savePath;
     QStringList sourceImgNames;
+    QString platesPath;
+    QString charsPath;
+    QStringList sourcePlateNames;
     int blur_Size = 5;
     int sobel_Scale = 1;
     int sobel_Delta = 0;

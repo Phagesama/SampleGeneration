@@ -107,6 +107,7 @@ void PlateLocator::on_inputButton_clicked()
     rootPath = QFileDialog::getExistingDirectory(this, "选择图片所在文件夹", "E:/");
     if (rootPath.isEmpty())
         return;
+    ui->fileList->clear();
     QDir* rootdir = new QDir(rootPath);
     QStringList nameFilters;
     nameFilters << "*.jpg" << "*.png" << "*.bmp";
@@ -444,4 +445,23 @@ void PlateLocator::on_simpleXML_clicked()
     }
     ui->fileList->setCurrentRow(0);
     showSourcePlate();
+}
+
+void PlateLocator::on_selectsourceplateButton_clicked()
+{
+    platesPath = QFileDialog::getExistingDirectory(this, "选择图片所在文件夹", "E:/");
+    if (platesPath.isEmpty())
+        return;
+    QString genplatesPath = platesPath + "/plates/普通车牌";
+    ui->plateList->clear();
+    QDir* platesdir = new QDir(genplatesPath);
+    QStringList nameFilters;
+    nameFilters << "*.jpg" << "*.png" << "*.bmp";
+    sourcePlateNames = platesdir->entryList(nameFilters);
+    for (QString sourcePlateName : sourcePlateNames)
+    {
+        ui->plateList->addItem(sourcePlateName);
+    }
+    ui->plateList->setCurrentRow(0);
+
 }

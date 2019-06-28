@@ -24,7 +24,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="cutTab">
        <attribute name="title">
@@ -1133,7 +1133,7 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>606</width>
+               <width>755</width>
                <height>69</height>
               </rect>
              </property>
@@ -1143,6 +1143,11 @@
          </widget>
         </item>
        </layout>
+      </widget>
+      <widget class="QWidget" name="charClassifyTab">
+       <attribute name="title">
+        <string>字符分类</string>
+       </attribute>
       </widget>
      </widget>
     </item>
