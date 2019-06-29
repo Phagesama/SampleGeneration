@@ -32,6 +32,7 @@ SOURCES += \
         platelocator_v3.cpp \
         saveimgthread.cpp \
         saveimgwidget.cpp \
+        showcharthread.cpp \
         showplatethread.cpp
 
 HEADERS += \
@@ -42,6 +43,7 @@ HEADERS += \
         platelocator_v3.h \
         saveimgthread.h \
         saveimgwidget.h \
+        showcharthread.h \
         showplatethread.h
 
 FORMS += \

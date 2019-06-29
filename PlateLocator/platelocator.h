@@ -13,6 +13,7 @@
 #include "matswitch.h"
 #include "saveimgwidget.h"
 #include "showplatethread.h"
+#include "showcharthread.h"
 
 namespace Ui {
 class PlateLocator;
@@ -28,6 +29,8 @@ public:
 
 private slots:
     void updateResList(QListWidgetItem *item);
+
+    void updateCharClassifyList(QListWidgetItem *item);
 
     void on_inputButton_clicked();
 
@@ -101,10 +104,22 @@ private slots:
 
     void on_selectsourceplateButton_clicked();
 
+    void on_plateList_currentRowChanged(int currentRow);
+
+    void on_selectCharPath_clicked();
+
+    void on_showChar_currentTextChanged(const QString &arg1);
+
+    void on_charCheckBox_stateChanged(int arg1);
+
+    void on_charMoveButton_clicked();
+
 private:
     void updatapara();
     void showCutedImage();
     void showSourcePlate();
+    void showSegedPlate();
+    void showSourceChar();
 
 public:
     QString rootPath;
@@ -140,6 +155,7 @@ public:
     int yellowup_V = 255;
     SaveImgWidget *saveImgWidget;
     ShowPlateThread *showPlateThread = nullptr;
+    ShowCharThread *showCharThread = nullptr;
 
 private:
     Ui::PlateLocator *ui;

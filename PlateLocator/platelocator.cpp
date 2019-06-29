@@ -67,8 +67,8 @@ void PlateLocator::showCutedImage()
                                                                                        blueup_H,blueup_S,blueup_V,
                                                                                        yellowlow_H,yellowlow_S,yellowlow_V,
                                                                                        yellowup_H,yellowup_S,yellowup_V);
-    QPixmap imgsource = MatSwitch::Mat2QPixmap(mat).scaled(1280,720);
-    QPixmap imgprocess = MatSwitch::Mat2QPixmap(matProcess,QImage::Format_Grayscale8).scaled(1280,720);
+    QPixmap imgsource = MatSwitch::Mat2QPixmap(mat);
+    QPixmap imgprocess = MatSwitch::Mat2QPixmap(matProcess,QImage::Format_Grayscale8);
     ui->sourceImgLabel->setPixmap(imgsource);
     ui->processImgLabel->setPixmap(imgprocess);
     for (PlateInfo plateInfo : plateInfos) {
@@ -81,6 +81,9 @@ void PlateLocator::showCutedImage()
 void PlateLocator::showSourcePlate()
 {
     QString classPath = savePath + "/plates/" + ui->showClass->currentText();
+    QDir dir = QDir(classPath);
+    if (dir.exists() == false)
+        return;
     ui->resList->clear();
     ui->resList->setIconSize(QSize(180,80));
     if (showPlateThread != nullptr)
@@ -94,12 +97,51 @@ void PlateLocator::showSourcePlate()
     showPlateThread->start();
 }
 
+void PlateLocator::showSegedPlate()
+{
+    ui->charList->clear();
+    ui->charList->setIconSize(QSize(80,160));
+    QString platePath = platesPath + "/plates/普通车牌/" + ui->plateList->currentItem()->text();
+    std::string str = platePath.toLocal8Bit().toStdString();
+    cv::Mat mat = cv::imread(str);
+    QPixmap platesource = MatSwitch::Mat2QPixmap(mat).scaled(360,160);
+    ui->plateImgLabel->setPixmap(platesource);
+
+}
+
+void PlateLocator::showSourceChar()
+{
+    QString classPath = charsPath + "/chars/" + ui->showChar->currentText();
+    QDir dir = QDir(classPath);
+    if (dir.exists() == false)
+        return;
+    ui->charClassifyList->clear();
+    ui->charClassifyList->setIconSize(QSize(80,160));
+    if (showCharThread != nullptr)
+    {
+        showCharThread->terminate();
+        showCharThread->destroyed();
+    }
+    showCharThread = new ShowCharThread();
+    connect(showCharThread,&ShowCharThread::getPixmap,this,&PlateLocator::updateCharClassifyList);
+    showCharThread->init(classPath);
+    showCharThread->start();
+}
+
 void PlateLocator::updateResList(QListWidgetItem *item)
 {
     QCheckBox *platecb = new QCheckBox();
     platecb->setCheckable(true);
     ui->resList->addItem(item);
     ui->resList->setItemWidget(item,platecb);
+}
+
+void PlateLocator::updateCharClassifyList(QListWidgetItem *item)
+{
+    QCheckBox *charcb = new QCheckBox();
+    charcb->setCheckable(true);
+    ui->charClassifyList->addItem(item);
+    ui->charClassifyList->setItemWidget(item,charcb);
 }
 
 void PlateLocator::on_inputButton_clicked()
@@ -117,6 +159,9 @@ void PlateLocator::on_inputButton_clicked()
         ui->fileList->addItem(sourceImgName);
     }
     ui->fileList->setCurrentRow(0);
+    //ui->statusBar->clearMessage();
+    //QLabel *count = new QLabel("图片数量：" + QString::number(ui->fileList->count()),this);
+    //ui->statusBar->addPermanentWidget(count);
     showCutedImage();
 }
 
@@ -455,6 +500,8 @@ void PlateLocator::on_selectsourceplateButton_clicked()
     QString genplatesPath = platesPath + "/plates/普通车牌";
     ui->plateList->clear();
     QDir* platesdir = new QDir(genplatesPath);
+    if(platesdir->exists() == false)
+        return;
     QStringList nameFilters;
     nameFilters << "*.jpg" << "*.png" << "*.bmp";
     sourcePlateNames = platesdir->entryList(nameFilters);
@@ -463,5 +510,61 @@ void PlateLocator::on_selectsourceplateButton_clicked()
         ui->plateList->addItem(sourcePlateName);
     }
     ui->plateList->setCurrentRow(0);
+    showSegedPlate();
+}
 
+void PlateLocator::on_plateList_currentRowChanged(int currentRow)
+{
+    showSegedPlate();
+}
+
+void PlateLocator::on_selectCharPath_clicked()
+{
+    charsPath = QFileDialog::getExistingDirectory(this, "选择字符图片所在文件夹", "E:/");
+    if (platesPath.isEmpty())
+        return;
+    showSourceChar();
+}
+
+void PlateLocator::on_showChar_currentTextChanged(const QString &arg1)
+{
+    showSourceChar();
+}
+
+void PlateLocator::on_charCheckBox_stateChanged(int arg1)
+{
+    int count = ui->charClassifyList->count();
+    for (int i = 0;i < count;i++)
+    {
+        QListWidgetItem *item = ui->charClassifyList->item(i);
+        QWidget *widget = ui->charClassifyList->itemWidget(item);
+        QCheckBox *box = (QCheckBox*)widget ;
+        box->setChecked(arg1);
+    }
+}
+
+void PlateLocator::on_charMoveButton_clicked()
+{
+    int count = ui->charClassifyList->count();
+    int i = 0;
+    while(i < count)
+    {
+        QListWidgetItem *item = ui->charClassifyList->item(i);
+        QWidget *widget = ui->charClassifyList->itemWidget(item);
+        QCheckBox *box = (QCheckBox*)widget ;
+        if(box->isChecked())
+        {
+            QString classPath = charsPath + "/chars/" + ui->showChar->currentText();
+            QString filename = classPath + "/" + item->whatsThis();
+            QString aimPath = charsPath + "/chars/" + ui->charAimClass->currentText() + "/" + item->whatsThis();
+            QFile::copy(filename,aimPath);
+            QDir classdir = QDir(classPath);
+            classdir.remove(filename);
+            delete item;
+            count--;
+        }else
+        {
+            i++;
+        }
+    }
 }
