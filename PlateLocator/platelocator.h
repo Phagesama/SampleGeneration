@@ -160,6 +160,7 @@ public:
 private:
     Ui::PlateLocator *ui;
     bool imgSaved = false;
+    bool plateClassified = false;
 };
 
 #endif // PLATELOCATOR_H

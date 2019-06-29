@@ -7,6 +7,7 @@ PlateLocator::PlateLocator(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setWindowTitle("样本生成");
+    PlateCategory_SVM::Load("./WhatILearned.xml");
     updatapara();
     saveImgWidget = new SaveImgWidget();
 }
@@ -52,11 +53,13 @@ void PlateLocator::showCutedImage()
 {
     ui->cuttedImgList->clear();
     ui->cuttedImgList->setIconSize(QSize(180,80));
+    if (ui->fileList->currentItem() == nullptr)
+        return;
     QString imgpath = rootPath + "/" + ui->fileList->currentItem()->text();
     std::string str = imgpath.toLocal8Bit().toStdString();
     cv::Mat mat = cv::imread(str);
     cv::Mat matProcess;
-    QList<PlateInfo> plateInfos = PlateLocator_V3::LocatePlatesForAutoSampleWithoutSVM(mat,&matProcess,
+    QList<PlateInfo> plateInfos = PlateLocator_V3::LocatePlatesForAutoSampleWithAllPara(mat,&matProcess,
                                                                                        blur_Size,sobel_Scale,sobel_Delta,
                                                                                        sobel_X_Weight,sobel_Y_Weight,
                                                                                        morph_Size_Width,morph_Size_Height,
@@ -101,6 +104,8 @@ void PlateLocator::showSegedPlate()
 {
     ui->charList->clear();
     ui->charList->setIconSize(QSize(80,160));
+    if (ui->plateList->currentItem() == nullptr)
+        return;
     QString platePath = platesPath + "/plates/普通车牌/" + ui->plateList->currentItem()->text();
     std::string str = platePath.toLocal8Bit().toStdString();
     cv::Mat mat = cv::imread(str);
@@ -195,6 +200,8 @@ void PlateLocator::on_sourcePlate_clicked()
 
 void PlateLocator::on_fileList_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
+    if(ui->fileList->count() == 0)
+        return;
     showCutedImage();
 }
 
@@ -394,9 +401,8 @@ void PlateLocator::on_moveButton_clicked()
 void PlateLocator::on_autoClassify_clicked()
 {
     QString XMLPath = QFileDialog::getOpenFileName(this, "选择XML文件路径", "E:/", "*.xml");
-    if (XMLPath.isEmpty())
-        return;
-    PlateCategory_SVM::Load(XMLPath);
+    if (XMLPath.isEmpty() == false)
+        PlateCategory_SVM::Load(XMLPath);
     QString classPath = savePath + "/plates/未识别";
     QDir* classdir = new QDir(classPath);
     QStringList nameFilters;

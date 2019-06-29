@@ -125,7 +125,7 @@ QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSample(cv::Mat matSource, c
     return plateInfos;
 }
 
-QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSampleWithoutSVM(cv::Mat matSource, cv::Mat *matProcess, int blur_Size, int sobel_Scale, int sobel_Delta, int sobel_X_Weight, int sobel_Y_Weight, int morph_Size_Width, int morph_Size_Height, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio, int bluelow_H, int bluelow_S, int bluelow_V, int blueup_H, int blueup_S, int blueup_V, int yellowlow_H, int yellowlow_S, int yellowlow_V, int yellowup_H, int yellowup_S, int yellowup_V)
+QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSampleWithAllPara(cv::Mat matSource, cv::Mat *matProcess, int blur_Size, int sobel_Scale, int sobel_Delta, int sobel_X_Weight, int sobel_Y_Weight, int morph_Size_Width, int morph_Size_Height, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio, int bluelow_H, int bluelow_S, int bluelow_V, int blueup_H, int blueup_S, int blueup_V, int yellowlow_H, int yellowlow_S, int yellowlow_V, int yellowup_H, int yellowup_S, int yellowup_V)
 {
     QList<PlateInfo> plateInfos = QList<PlateInfo>();
     cv::Mat gray;
@@ -164,21 +164,26 @@ QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSampleWithoutSVM(cv::Mat ma
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchys;
     cv::findContours(threshold_Erode,contours,hierarchys,cv::RetrievalModes::RETR_EXTERNAL,cv::ContourApproximationModes::CHAIN_APPROX_NONE);
+    int isPlateCount = 0;
     for (int i = 0;i < contours.size();i++) {
         cv::RotatedRect rotatedRect = cv::minAreaRect(contours[i]);
         cv::Rect rectROI = cv::boundingRect(contours[i]);
         if(VerifyPlateSize(rectROI.size(),minWidth,maxWidth,minHeight,maxHeight,minRatio,maxRatio))
         {
             cv::Mat matROI = matSource(rectROI);
+            PlateCategory plateCategory = PlateCategory_SVM::Test(matROI);
+            if(plateCategory != PlateCategory::非车牌) isPlateCount++;
             PlateInfo plateInfo = PlateInfo();
             plateInfo.rotatedRect = rotatedRect;
             plateInfo.originalRect = rectROI;
             plateInfo.originalMat = matROI;
-            plateInfo.plateCategory = PlateCategory::未识别;
+            plateInfo.plateCategory = plateCategory;
             plateInfo.plateLocateMethod = PlateLocateMethod::颜色法;
+
             plateInfos.append(plateInfo);
         }
     }
+    if(isPlateCount>0) return plateInfos;
     cv::GaussianBlur(matSource,blur,cv::Size(blur_Size,blur_Size),0,0,cv::BorderTypes::BORDER_DEFAULT);
     cv::cvtColor(blur,gray,cv::COLOR_BGR2GRAY);
     cv::Mat grad_x;
@@ -206,11 +211,12 @@ QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSampleWithoutSVM(cv::Mat ma
         {
             cv::RotatedRect rotatedRect = cv::minAreaRect(contours[i]);
             cv::Mat matROI = matSource(rectROI);
+            PlateCategory plateCategory = PlateCategory_SVM::Test(matROI);
             PlateInfo plateInfo = PlateInfo();
             plateInfo.rotatedRect = rotatedRect;
             plateInfo.originalRect = rectROI;
             plateInfo.originalMat = matROI;
-            plateInfo.plateCategory = PlateCategory::未识别;
+            plateInfo.plateCategory = plateCategory;
             plateInfo.plateLocateMethod = PlateLocateMethod::Sobel法;
             plateInfos.append(plateInfo);
         }

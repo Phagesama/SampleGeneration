@@ -25,9 +25,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+        charsegment_v3.cpp \
         main.cpp \
         matswitch.cpp \
         platecategory_svm.cpp \
+        platechar_svm.cpp \
         platelocator.cpp \
         platelocator_v3.cpp \
         saveimgthread.cpp \
@@ -36,9 +38,11 @@ SOURCES += \
         showplatethread.cpp
 
 HEADERS += \
+        charsegment_v3.h \
         matswitch.h \
         platecategory.h \
         platecategory_svm.h \
+        platechar_svm.h \
         platelocator.h \
         platelocator_v3.h \
         saveimgthread.h \

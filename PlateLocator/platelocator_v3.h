@@ -63,7 +63,7 @@ public:
                                                       int minHeight = 18, int maxHeight = 80,
                                                       float minRatio = 0.15f, float maxRatio = 0.70f);
 
-    static QList<PlateInfo> LocatePlatesForAutoSampleWithoutSVM(cv::Mat matSource,
+    static QList<PlateInfo> LocatePlatesForAutoSampleWithAllPara(cv::Mat matSource,
                                                                 cv::Mat *matProcess,
                                                                 int blur_Size = 5,
                                                                 int sobel_Scale = 1,

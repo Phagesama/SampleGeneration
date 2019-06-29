@@ -6,6 +6,7 @@
 #include <QString>
 #include <opencv2/opencv.hpp>
 #include <qtextcodec.h>
+#include <QDebug>
 
 enum PlateCategory
 {
@@ -231,7 +232,7 @@ enum PlateLocateMethod
     MSER法 = 5
 };
 
-const QList<QString> PlateLocateMethodStringp =
+const QList<QString> PlateLocateMethodString =
 {
     "未知方法",
     "颜色法_蓝黑",
@@ -306,16 +307,16 @@ public:
 
     QString info()
     {
-        return "字符:" + QString::number(this->plateChar) + "\r\n"
+        return "字符:" + PlateCharString[plateChar] + "\r\n"
                 + "宽:" + QString::number(this->originalRect.width) + "\r\n"
                 + "高:" + QString::number(this->originalRect.height) + "\r\n"
-                + "宽高比:" + QString("float is %2").arg((float)this->originalRect.width/this->originalRect.height) + "\r\n"
+                + "宽高比:" + QString("%2").arg((float)this->originalRect.width/this->originalRect.height) + "\r\n"
                 + "左:" + QString::number(this->originalRect.x) + "\r\n"
                 + "右:" + QString::number(this->originalRect.x + this->originalRect.width) + "\r\n"
                 + "上:" + QString::number(this->originalRect.y) + "\r\n"
                 + "下:" + QString::number(this->originalRect.y + this->originalRect.height) + "\r\n"
-                + "车牌定位:" + QString::number(this->plateLocateMethod) + "\r\n"
-                + "字符切分" + QString::number(this->charSplitMethod) + "\r\n";
+                + "车牌定位:" + PlateLocateMethodString[this->plateLocateMethod] + "\r\n"
+                + "字符切分:" + CharSplitMethodString[this->charSplitMethod] + "\r\n";
     }
 
     CharInfo(){}

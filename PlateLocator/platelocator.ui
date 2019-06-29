@@ -24,7 +24,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>3</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="platecutTab">
        <attribute name="title">
@@ -1144,6 +1144,12 @@
               <verstretch>1</verstretch>
              </sizepolicy>
             </property>
+            <property name="flow">
+             <enum>QListView::LeftToRight</enum>
+            </property>
+            <property name="viewMode">
+             <enum>QListView::IconMode</enum>
+            </property>
            </widget>
            <widget class="QScrollArea" name="charsegmentOptimization">
             <property name="sizePolicy">
@@ -1618,11 +1624,6 @@
             <property name="editable">
              <bool>true</bool>
             </property>
-            <item>
-             <property name="text">
-              <string>未识别字符</string>
-             </property>
-            </item>
             <item>
              <property name="text">
               <string>非字符</string>

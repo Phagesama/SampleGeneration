@@ -48,6 +48,7 @@ void SaveImgThread::init(QStringList sourceImgNamesPara, QString savePathPara, Q
 
 void SaveImgThread::run()
 {
+    PlateCategory_SVM::Load("./WhatILearned.xml");
     if (savePath == nullptr)
         return;
     if (rootPath == nullptr)
@@ -65,7 +66,7 @@ void SaveImgThread::run()
         std::string str = imgpath.toLocal8Bit().toStdString();
         cv::Mat mat = cv::imread(str);
         cv::Mat matProcess;
-        QList<PlateInfo> plateInfos = PlateLocator_V3::LocatePlatesForAutoSampleWithoutSVM(mat,&matProcess,blur_Size,sobel_Scale,sobel_Delta,sobel_X_Weight,sobel_Y_Weight,morph_Size_Width,morph_Size_Height,minWidth,maxWidth,minHeight,maxHeight,minRatio,maxRatio,bluelow_H,bluelow_S,bluelow_V,blueup_H,blueup_S,blueup_V,yellowlow_H,yellowlow_S,yellowlow_V,yellowup_H,yellowup_S,yellowup_V);
+        QList<PlateInfo> plateInfos = PlateLocator_V3::LocatePlatesForAutoSampleWithAllPara(mat,&matProcess,blur_Size,sobel_Scale,sobel_Delta,sobel_X_Weight,sobel_Y_Weight,morph_Size_Width,morph_Size_Height,minWidth,maxWidth,minHeight,maxHeight,minRatio,maxRatio,bluelow_H,bluelow_S,bluelow_V,blueup_H,blueup_S,blueup_V,yellowlow_H,yellowlow_S,yellowlow_V,yellowup_H,yellowup_S,yellowup_V);
         for (PlateInfo plateInfo : plateInfos) {
             imgCount++;
             QString cuttedImgName = savePath + "/plates/未识别/" + QString::number(imgCount) + ".jpg";
