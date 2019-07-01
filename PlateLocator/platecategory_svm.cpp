@@ -6,6 +6,8 @@ cv::Size PlateCategory_SVM::HOGBlockSize = cv::Size(16, 16);
 cv::Size PlateCategory_SVM::HOGBlockStride = cv::Size(8,8);
 cv::Size PlateCategory_SVM::HOGCellSize = cv::Size(8, 8);
 int PlateCategory_SVM::HOGNBits = 9;
+int PlateCategory_SVM::HOGSize = 36 * ((HOGWinSize.width - HOGBlockSize.width) / HOGBlockStride.width + 1) * ((HOGWinSize.height - HOGBlockSize.height) / HOGBlockStride.height + 1);
+
 cv::Ptr<cv::ml::SVM> PlateCategory_SVM::svm = nullptr;
 
 PlateCategory_SVM::PlateCategory_SVM()
@@ -21,12 +23,14 @@ void PlateCategory_SVM::SavePlateSample(PlateInfo plateInfo, QString fileName)
 
 void PlateCategory_SVM::SavePlateSample(cv::Mat matPlate, PlateCategory plateCategory, QString libPath)
 {
+    cv::Mat mat = matPlate.clone();
     QTime now = QTime::currentTime();
     QString name = now.toString() + QString::number(random(100000));
-    QString fileName = libPath + "\\plate\\" + plateCategory + "\\" + name + ".jpg";
+    QString fileName = libPath + "/plates/" + PlateCategoryString[plateCategory] + "/" + name + ".jpg";
 
     std::string str = fileName.toLocal8Bit().toStdString();
-    cv::imwrite(str, matPlate);
+    if(cv::imwrite(str, mat))
+        std::cout<<"succeed"<<std::endl;
 }
 
 void PlateCategory_SVM::SavePlateSample(cv::Mat matPlate, PlateCategory plateCategory, QString libPath, QString shortFileNameNoExt)
@@ -149,7 +153,6 @@ bool PlateCategory_SVM::PreparePlateTrainningDirectory(QString path)
         {
             dir.mkpath(platesDiretory);
         }
-
         for(int index_plateCategory = 0; index_plateCategory < PlateCategoryString.size(); index_plateCategory++)
         {
             QString plateCategoryDirectory = platesDiretory + "\\" + PlateCategoryString[index_plateCategory];
@@ -164,4 +167,29 @@ bool PlateCategory_SVM::PreparePlateTrainningDirectory(QString path)
     }
 
     return success;
+}
+
+bool PlateCategory_SVM::checkTestDirectory(QString path)
+{
+    QDir dir;
+    try {
+        QString platesDiretory = path + "\\plates";
+        if(dir.exists(platesDiretory) == false)
+        {
+            return false;
+        }
+        for(int index_plateCategory = 0; index_plateCategory < PlateCategoryString.size(); index_plateCategory++)
+        {
+            QString plateCategoryDirectory = platesDiretory + "\\" + PlateCategoryString[index_plateCategory];
+            if(dir.exists(plateCategoryDirectory) == false)
+            {
+                return  false;
+            }
+        }
+
+    } catch (std::exception) {
+        return  false;
+    }
+
+    return true;
 }

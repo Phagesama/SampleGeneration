@@ -48,7 +48,7 @@ void SaveImgThread::init(QStringList sourceImgNamesPara, QString savePathPara, Q
 
 void SaveImgThread::run()
 {
-    PlateCategory_SVM::Load("./WhatILearned.xml");
+    PlateCategory_SVM::Load("./plateLearned.xml");
     if (savePath == nullptr)
         return;
     if (rootPath == nullptr)

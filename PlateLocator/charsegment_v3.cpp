@@ -38,8 +38,6 @@ cv::Mat CharSegment_V3::ClearMaoding(cv::Mat threshold)
 
     jump.release();
     return result;
-
-
 }
 
 //void clearMaoDing(Mat mask, int &top, int &bottom) {
@@ -102,13 +100,14 @@ cv::Mat CharSegment_V3::ClearBorder(cv::Mat threshold)
     // 记录每一行是否为边界
     cv::Mat border(rows,1,CV_8UC1);
     // 每一行有15%的值与前一个点相同时认定为边界
-    for (int rowIndex = 0;rowIndex<rows;rowIndex++) {
+    for (int rowIndex = 0;rowIndex < rows;rowIndex++) {
         int noJumpCount = 0;
         unsigned char isBorder =0;
         // 有超过15%的值相同时认为是边界
-        for (int colIndex = 0;colIndex<cols-1;colIndex++) {
+        for (int colIndex = 0;colIndex < cols - 1;colIndex++) {
             if(threshold.at<unsigned char>(rowIndex,colIndex) ==
-                    threshold.at<unsigned char>(rowIndex,colIndex+1)) noJumpCount++;
+                    threshold.at<unsigned char>(rowIndex,colIndex+1))
+                noJumpCount++;
             // 认定本行为边界
             if (noJumpCount > noJumpCountThresh)
             {
@@ -117,7 +116,7 @@ cv::Mat CharSegment_V3::ClearBorder(cv::Mat threshold)
                 break;
             }
         }
-        border.at<unsigned char>(rowIndex,0,isBorder);
+        border.at<unsigned char>(rowIndex,0) = isBorder;
     }
 
     int minTop = (int)(0.1f*rows);
@@ -181,7 +180,6 @@ QList<CharInfo> CharSegment_V3::SplitCharsInPlateMat(cv::Mat plateMat, QList<cv:
 {
     if (PlateChar_SVM::isReady == false)
     {
-        //throw  new QException ("字符识别库没有准备好") ;
         qDebug() << "字符识别库没有准备好";
     }
     QList<CharInfo> result;
@@ -203,6 +201,7 @@ QList<CharInfo> CharSegment_V3::SplitCharsInPlateMat(cv::Mat plateMat, QList<cv:
     return result;
 
 }
+
 // 函数5，调用函数6，7，8，9， 主函数，调用这个函数可以将车牌图片传入，将切好并识别的字符信息类传出
 QList<CharInfo> CharSegment_V3::SplitPlateForAutoSample(cv::Mat plateMat)
 {
@@ -210,92 +209,187 @@ QList<CharInfo> CharSegment_V3::SplitPlateForAutoSample(cv::Mat plateMat)
     // 四种方法识别蓝色图像
     QList<CharInfo> charInfos_Original_Blue = SplitPlateByOriginal(plateMat,plateMat, PlateColor::蓝牌);
     QList<CharInfo> charInfos_IndexTransform_Blue = SplitPlateByIndexTransform(plateMat,PlateColor::蓝牌);
-     QList<CharInfo> charInfos_GammaTransform_Blue = SplitPlateByGammaTransform(plateMat,PlateColor::蓝牌);
+    QList<CharInfo> charInfos_GammaTransform_Blue = SplitPlateByGammaTransform(plateMat,PlateColor::蓝牌);
     QList<CharInfo> charInfos_LogTransform_Blue = SplitPlateByLogTransform(plateMat, PlateColor::蓝牌);
-    //
+
     QList<CharInfo> charInfos_Blue;
     // charInfos_Blue.AddRange(charInfos_Original_Blue.ToArray());
-    foreach (CharInfo ci, charInfos_Original_Blue) charInfos_Blue.append(ci);
-    foreach (CharInfo ci, charInfos_IndexTransform_Blue) charInfos_Blue.append(ci);
-    foreach (CharInfo ci, charInfos_GammaTransform_Blue) charInfos_Blue.append(ci);
-    foreach (CharInfo ci, charInfos_LogTransform_Blue) charInfos_Blue.append(ci);
-    return charInfos_Blue;
+    charInfos_Blue.append(charInfos_Original_Blue);
+    charInfos_Blue.append(charInfos_IndexTransform_Blue);
+    charInfos_Blue.append(charInfos_GammaTransform_Blue);
+    charInfos_Blue.append(charInfos_LogTransform_Blue);
+
     // 用SVM识别图片中字符的个数
     int isCharCount = 0;
-//    for (int index = 0; index < charInfos_Blue->count(); index++)
-//    {
-//        CharInfo charInfo = charInfos_Blue->at(index);
-//        // 将切出的字符进行识别
-//        charInfo.plateChar = PlateChar_SVM::Test(charInfo.originalMat);
-//        if (charInfo.plateChar != PlateChar::非字符) isCharCount++;
-//    }
-    // 如果用蓝色切分字符，少于15个，就再用⻩色尝试切分
-    if (isCharCount >= 15) return charInfos_Blue;// 差不多当蓝色识别出来了
+    for (int index = 0; index < charInfos_Blue.size(); index++)
+    {
+        CharInfo charInfo = charInfos_Blue[index];
+        // 将切出的字符进行识别
+        charInfo.plateChar = PlateChar_SVM::Test(charInfo.originalMat);
+        if (charInfo.plateChar != PlateChar::非字符)
+            isCharCount++;
+    }
+    // 如果用蓝色切分字符，少于15个，就再用黄色尝试切分
+    if (isCharCount >= 15)
+        return charInfos_Blue;
+
     QList<CharInfo> charInfos_Original_Yellow = SplitPlateByOriginal(plateMat,plateMat, PlateColor::黄牌);
     QList<CharInfo> charInfos_IndexTransform_Yellow = SplitPlateByIndexTransform(plateMat,PlateColor::黄牌);
     QList<CharInfo> charInfos_GammaTransform_Yellow = SplitPlateByGammaTransform(plateMat,PlateColor::黄牌);
     QList<CharInfo> charInfos_LogTransform_Yellow = SplitPlateByLogTransform(plateMat, PlateColor::黄牌);
+
     QList<CharInfo> charInfos_Yellow;
     // charInfos_Blue.AddRange(charInfos_Original_Blue.ToArray());
-    foreach (CharInfo ci, charInfos_Original_Yellow) charInfos_Yellow.append(ci);
-    foreach (CharInfo ci, charInfos_IndexTransform_Yellow) charInfos_Yellow.append(ci);
-    foreach (CharInfo ci, charInfos_GammaTransform_Yellow) charInfos_Yellow.append(ci);
-    foreach (CharInfo ci, charInfos_LogTransform_Yellow) charInfos_Yellow.append(ci);
+    charInfos_Yellow.append(charInfos_Original_Yellow);
+    charInfos_Yellow.append(charInfos_IndexTransform_Yellow);
+    charInfos_Yellow.append(charInfos_GammaTransform_Yellow);
+    charInfos_Yellow.append(charInfos_LogTransform_Yellow);
+
     // 用SVM识别图片中字符的个数
     isCharCount = 0;
-    for (int index = 0; index < charInfos_Yellow.count(); index++)
+    for (int index = 0; index < charInfos_Yellow.size(); index++)
     {
-        CharInfo charInfo = charInfos_Yellow.at(index);
+        CharInfo charInfo = charInfos_Yellow[index];
         charInfo.plateChar = PlateChar_SVM::Test(charInfo.originalMat);
-        if (charInfo.plateChar != PlateChar::非字符) isCharCount++;
+        if (charInfo.plateChar != PlateChar::非字符)
+            isCharCount++;
     }
-    if (isCharCount >= 15) return charInfos_Yellow;// 差不多当黄色识别出来了
-    QList<CharInfo> *empty = new QList<CharInfo>();
-    return *empty;
+    if (isCharCount >= 15)
+        return charInfos_Yellow;
+
+    QList<CharInfo> empty = QList<CharInfo>();
+    return empty;
     //返回长度为零的集合，未识别
 }
 
-// 函数6，调用函数9、23，用指数变换结果分割字符
-QList<CharInfo> CharSegment_V3::SplitPlateByIndexTransform(cv::Mat originalMat, PlateColor plateColor, int leftLimit, int rightLimit, int topLimit, int bottomLimit, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
+// 函数6，调用函数7，8，9，10，主函数，调用这个函数可以将车牌图片传入，并传入参数，将切好并识别的字符信息类传出
+QList<CharInfo> CharSegment_V3::SplitPlateForAutoSampleWithAllPara(cv::Mat plateMat, float gammaFactor, int leftLimit, int rightLimit, int topLimit, int bottomLimit, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
+{
+    // 先用蓝色识别法识别，不成功再使用黄色
+    // 四种方法识别蓝色图像
+    QList<CharInfo> charInfos_Original_Blue = SplitPlateByOriginal(plateMat, plateMat, PlateColor::蓝牌,CharSplitMethod::原图,
+                                                                   leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_IndexTransform_Blue = SplitPlateByIndexTransform(plateMat,PlateColor::蓝牌,
+                                                                               leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_GammaTransform_Blue = SplitPlateByGammaTransform(plateMat,PlateColor::蓝牌,
+                                                                               gammaFactor, leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_LogTransform_Blue = SplitPlateByLogTransform(plateMat, PlateColor::蓝牌,
+                                                                           leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+
+    QList<CharInfo> charInfos_Blue;
+    // charInfos_Blue.AddRange(charInfos_Original_Blue.ToArray());
+    charInfos_Blue.append(charInfos_Original_Blue);
+    charInfos_Blue.append(charInfos_IndexTransform_Blue);
+    charInfos_Blue.append(charInfos_GammaTransform_Blue);
+    charInfos_Blue.append(charInfos_LogTransform_Blue);
+
+    // 用SVM识别图片中字符的个数
+    int isCharCount = 0;
+    for (int index = 0; index < charInfos_Blue.size(); index++)
+    {
+        CharInfo charInfo = charInfos_Blue[index];
+        // 将切出的字符进行识别
+        charInfo.plateChar = PlateChar_SVM::Test(charInfo.originalMat);
+        if (charInfo.plateChar != PlateChar::非字符)
+            isCharCount++;
+    }
+    // 如果用蓝色切分字符，少于15个，就再用黄色尝试切分
+    if (isCharCount >= 15)
+        return charInfos_Blue;
+
+    QList<CharInfo> charInfos_Original_Yellow = SplitPlateByOriginal(plateMat,plateMat, PlateColor::黄牌,CharSplitMethod::原图,
+                                                                     leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_IndexTransform_Yellow = SplitPlateByIndexTransform(plateMat,PlateColor::黄牌,
+                                                                                 leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_GammaTransform_Yellow = SplitPlateByGammaTransform(plateMat,PlateColor::黄牌,
+                                                                                 gammaFactor, leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+    QList<CharInfo> charInfos_LogTransform_Yellow = SplitPlateByLogTransform(plateMat, PlateColor::黄牌,
+                                                                             leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+
+    QList<CharInfo> charInfos_Yellow;
+    // charInfos_Blue.AddRange(charInfos_Original_Blue.ToArray());
+    charInfos_Yellow.append(charInfos_Original_Yellow);
+    charInfos_Yellow.append(charInfos_IndexTransform_Yellow);
+    charInfos_Yellow.append(charInfos_GammaTransform_Yellow);
+    charInfos_Yellow.append(charInfos_LogTransform_Yellow);
+
+    // 用SVM识别图片中字符的个数
+    isCharCount = 0;
+    for (int index = 0; index < charInfos_Yellow.size(); index++)
+    {
+        CharInfo charInfo = charInfos_Yellow[index];
+        charInfo.plateChar = PlateChar_SVM::Test(charInfo.originalMat);
+        if (charInfo.plateChar != PlateChar::非字符)
+            isCharCount++;
+    }
+    if (isCharCount >= 15)
+        return charInfos_Yellow;
+
+    QList<CharInfo> empty = QList<CharInfo>();
+    return empty;
+    //返回长度为零的集合，未识别
+}
+
+// 函数7，调用函数9、23，用指数变换结果分割字符
+QList<CharInfo> CharSegment_V3::SplitPlateByIndexTransform(cv::Mat originalMat, PlateColor plateColor,
+                                                           int leftLimit, int rightLimit,
+                                                           int topLimit, int bottomLimit,
+                                                           int minWidth, int maxWidth,
+                                                           int minHeight, int maxHeight,
+                                                           float minRatio, float maxRatio)
 {
     cv::Mat plateMat = IndexTransform(originalMat);
     return SplitPlateByOriginal(originalMat,plateMat, plateColor, CharSplitMethod::指数,
-    leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+                                leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
 }
 
-// 函数7，调用函数9、24，用对数变换结果分割字符
-QList<CharInfo> CharSegment_V3::SplitPlateByLogTransform(cv::Mat originalMat, PlateColor plateColor, int leftLimit, int rightLimit, int topLimit, int bottomLimit, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
+// 函数8，调用函数9、24，用对数变换结果分割字符
+QList<CharInfo> CharSegment_V3::SplitPlateByLogTransform(cv::Mat originalMat, PlateColor plateColor,
+                                                         int leftLimit, int rightLimit,
+                                                         int topLimit, int bottomLimit,
+                                                         int minWidth, int maxWidth,
+                                                         int minHeight, int maxHeight,
+                                                         float minRatio, float maxRatio)
 {
     cv::Mat plateMat = LogTransform(originalMat);
     return SplitPlateByOriginal(originalMat,plateMat, plateColor, CharSplitMethod::对数,
-    leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+                                leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
 }
 
-// 函数8，调用函数9、25，用伽马变换结果分割字符
-QList<CharInfo> CharSegment_V3::SplitPlateByGammaTransform(cv::Mat originalMat, PlateColor plateColor, float gammaFactor, int leftLimit, int rightLimit, int topLimit, int bottomLimit, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
+// 函数9，调用函数9、25，用伽马变换结果分割字符
+QList<CharInfo> CharSegment_V3::SplitPlateByGammaTransform(cv::Mat originalMat, PlateColor plateColor, float gammaFactor,
+                                                           int leftLimit, int rightLimit,
+                                                           int topLimit, int bottomLimit,
+                                                           int minWidth, int maxWidth,
+                                                           int minHeight, int maxHeight,
+                                                           float minRatio, float maxRatio)
 {
     cv::Mat plateMat = GammaTransform(originalMat, gammaFactor);
     return SplitPlateByOriginal(originalMat,plateMat, plateColor, CharSplitMethod::伽马,
-    leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
+                                leftLimit, rightLimit, topLimit, bottomLimit, minWidth, maxWidth, minHeight, maxHeight, minRatio, maxRatio);
 }
 
-// 函数9，用原图形分割字符
-QList<CharInfo> CharSegment_V3::SplitPlateByOriginal(cv::Mat originalMat, cv::Mat plateMat, PlateColor plateColor, CharSplitMethod charSplitMethod, int leftLimit, int rightLimit, int topLimit, int bottomLimit, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
+// 函数10，用原图形分割字符
+QList<CharInfo> CharSegment_V3::SplitPlateByOriginal(cv::Mat originalMat, cv::Mat plateMat, PlateColor plateColor, CharSplitMethod charSplitMethod,
+                                                     int leftLimit, int rightLimit,
+                                                     int topLimit, int bottomLimit,
+                                                     int minWidth, int maxWidth,
+                                                     int minHeight, int maxHeight,
+                                                     float minRatio, float maxRatio)
 {
     QList<CharInfo> result;
     cv::Mat gray;
-    // 转为灰色图像
 
+    // 转为灰色图像
     cv::cvtColor(plateMat,gray,cv::COLOR_BGR2GRAY);
 
-            //cvtColor(ColorConversionCodes.BGR2GRAY);
     // 去除杂质
     cv::Mat matOfClearMaodingAndBorder = ClearMaodingAndBorder(gray, plateColor);
-    // 尝试开操作
-//    cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT,cv::Size(3,3));
-//    cv::dilate(matOfClearMaodingAndBorder,matOfClearMaodingAndBorder,element);
-//    cv::erode(matOfClearMaodingAndBorder,matOfClearMaodingAndBorder,element);
 
+    // 尝试开操作
+    /*cv::Mat element = cv::getStructuringElement(cv::MORPH_RECT,cv::Size(3,3));
+    cv::dilate(matOfClearMaodingAndBorder,matOfClearMaodingAndBorder,element);
+    cv::erode(matOfClearMaodingAndBorder,matOfClearMaodingAndBorder,element);*/
 
     // 寻找门槛图像(为1的部分)的连通区域
     std::vector<std::vector<cv::Point>> contours;
@@ -345,7 +439,7 @@ QList<CharInfo> CharSegment_V3::SplitPlateByOriginal(cv::Mat originalMat, cv::Ma
     return result;
 }
 
-// 函数10，保证矩形符合参数要求的规范
+// 函数11，保证矩形符合参数要求的规范
 bool CharSegment_V3::VerifyRect(cv::Rect rect, int minWidth, int maxWidth, int minHeight, int maxHeight, float minRatio, float maxRatio)
 {
     int width = rect.width;
@@ -357,7 +451,7 @@ bool CharSegment_V3::VerifyRect(cv::Rect rect, int minWidth, int maxWidth, int m
             (ratio > minRatio && ratio < maxRatio));
 }
 
-// 函数11，保证内容不在边界
+// 函数12，保证内容不在边界
 bool CharSegment_V3::NotOnBorder(cv::Rect rectToJudge, cv::Size borderSize, int leftLimit, int rightLimit, int topLimit, int bottomLimit)
 {
     float leftPercent = leftLimit / 100;
@@ -374,18 +468,21 @@ bool CharSegment_V3::NotOnBorder(cv::Rect rectToJudge, cv::Size borderSize, int 
     return (xLimit <= rectToJudge.x && yLimit <= rectToJudge.y
             && widthLimit >= rectToJudge.width && heightLimit >= rectToJudge.height);
 }
-// 函数12 按左到右排序
+
+// 函数13 按左到右排序
 void CharSegment_V3::SortRectsByLeft_ASC(QList<cv::Rect> rects)
 {
     qSort(rects.begin(),rects.end(),RectLeftCompare);
 }
-// 函数13 按高度排序
+
+// 函数14 按高度排序
 void CharSegment_V3::SortRectsByHeight_ASC(QList<cv::Rect> rects)
 {
     qSort(rects.begin(),rects.end(),RectHeightCompare);
 
 }
-// 函数14，合并两个矩形
+
+// 函数15，合并两个矩形
 cv::Rect CharSegment_V3::MergeRect(cv::Rect A, cv::Rect B)
 {
     cv::Rect result;
@@ -400,7 +497,8 @@ cv::Rect CharSegment_V3::MergeRect(cv::Rect A, cv::Rect B)
 
     return result;
 }
-// 函数15，调整字符大小使得所有矩形的大小相似，并包含字符
+
+// 函数16，调整字符大小使得所有矩形的大小相似，并包含字符
 QList<cv::Rect> CharSegment_V3::AdjustRects(QList<cv::Rect> rects)
 {
     float averageHeight = GetRectsAverageHeight(rects);
@@ -426,7 +524,7 @@ QList<cv::Rect> CharSegment_V3::AdjustRects(QList<cv::Rect> rects)
     return rects;
 }
 
-// 函数16，将需要合并的字符小矩形合并为大矩形
+// 函数17，将需要合并的字符小矩形合并为大矩形
 QList<cv::Rect> CharSegment_V3::MergeRects(QList<cv::Rect> rects)
 {
     QList<int> *indexesOfMerge = new QList<int>();
@@ -467,7 +565,7 @@ QList<cv::Rect> CharSegment_V3::MergeRects(QList<cv::Rect> rects)
     return *result;
 }
 
-// 函数17 去除矩形中的小矩形
+// 函数18 去除矩形中的小矩形
 QList<cv::Rect> CharSegment_V3::RejectInnerRectFromRects(QList<cv::Rect> rects)
 {
     for (int index = rects.count() - 1; index >= 0; index--)
@@ -493,7 +591,7 @@ QList<cv::Rect> CharSegment_V3::RejectInnerRectFromRects(QList<cv::Rect> rects)
     return rects;
 }
 
-// 函数18 取高度平均值
+// 函数19 取高度平均值
 float CharSegment_V3::GetRectsAverageHeight(QList<cv::Rect> rects)
 {
     float aver = 0;
@@ -505,7 +603,7 @@ float CharSegment_V3::GetRectsAverageHeight(QList<cv::Rect> rects)
 
     return aver/rects.count();
 }
-// 函数19 取高度最大值
+// 函数20 取高度最大值
 int CharSegment_V3::GetRectsMaxHeight(QList<cv::Rect> rects)
 {
     int max = 0;
@@ -518,7 +616,7 @@ int CharSegment_V3::GetRectsMaxHeight(QList<cv::Rect> rects)
     return max;
 }
 
-// 函数20 取上沿中间值
+// 函数21 取上沿中间值
 int CharSegment_V3::GetMedianRectsTop(QList<cv::Rect> rects)
 {
     if (rects.count() == 0) return 0;
@@ -527,7 +625,7 @@ int CharSegment_V3::GetMedianRectsTop(QList<cv::Rect> rects)
     return rects[midianIndex].y;
 }
 
-// 函数21 取下沿中间值
+// 函数22 取下沿中间值
 int CharSegment_V3::GetMedianRectsBottom(QList<cv::Rect> rects)
 {
     if (rects.count() == 0) return 0;
@@ -536,7 +634,7 @@ int CharSegment_V3::GetMedianRectsBottom(QList<cv::Rect> rects)
     return rects[midianIndex].y+rects[midianIndex].height;
 }
 
-// 函数22 保证矩形在图像内部
+// 函数23 保证矩形在图像内部
 cv::Rect CharSegment_V3::GetSafeRect(cv::Rect rect, cv::Mat plateMat)
 {
     if (rect.x < 0) rect.x = 0;
@@ -547,7 +645,8 @@ cv::Rect CharSegment_V3::GetSafeRect(cv::Rect rect, cv::Mat plateMat)
         rect.height= plateMat.rows-rect.y;
     return rect;
 }
-// 函数23 图像指数变换，将图像取平方除以255
+
+// 函数24 图像指数变换，将图像取平方除以255
 cv::Mat CharSegment_V3::IndexTransform(cv::Mat originalMap)
 {
     cv::Mat *result = new cv::Mat(originalMap.size(), originalMap.type());
@@ -573,7 +672,7 @@ cv::Mat CharSegment_V3::IndexTransform(cv::Mat originalMap)
     return *result;
 }
 
-// 函数24 图像对数变换，将RGB色取对数乘系数
+// 函数25 图像对数变换，将RGB色取对数乘系数
 cv::Mat CharSegment_V3::LogTransform(cv::Mat originalMap)
 {
     cv::Mat *result = new cv::Mat(originalMap.size(), originalMap.type());
@@ -599,7 +698,7 @@ cv::Mat CharSegment_V3::LogTransform(cv::Mat originalMap)
 
 }
 
-// 函数25 图像伽马变换
+// 函数26 图像伽马变换
 cv::Mat CharSegment_V3::GammaTransform(cv::Mat originalMap, float gammaFactor)
 {
     int lut[256];
@@ -677,8 +776,6 @@ bool CharSegment_V3::RectLeftCompare(cv::Rect x, cv::Rect y)
     }
     return  false;
 }
-
-
 
 bool CharSegment_V3::CharInfoLeftCompare(CharInfo x, CharInfo y)
 {

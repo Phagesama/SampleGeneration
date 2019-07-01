@@ -24,7 +24,7 @@
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="platecutTab">
        <attribute name="title">
@@ -1148,7 +1148,7 @@
              <enum>QListView::LeftToRight</enum>
             </property>
             <property name="viewMode">
-             <enum>QListView::IconMode</enum>
+             <enum>QListView::ListMode</enum>
             </property>
            </widget>
            <widget class="QScrollArea" name="charsegmentOptimization">
@@ -1172,10 +1172,231 @@
               <rect>
                <x>0</x>
                <y>0</y>
-               <width>755</width>
+               <width>822</width>
                <height>198</height>
               </rect>
              </property>
+             <layout class="QHBoxLayout" name="horizontalLayout_5">
+              <item>
+               <layout class="QVBoxLayout" name="QACLLayout">
+                <item>
+                 <widget class="QGroupBox" name="GFgroupBox">
+                  <property name="title">
+                   <string>Gamma校正</string>
+                  </property>
+                  <layout class="QHBoxLayout" name="horizontalLayout_3">
+                   <item>
+                    <widget class="QLabel" name="GFlabel">
+                     <property name="text">
+                      <string>Gamma校正因子：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="GammaFactor">
+                     <property name="maximum">
+                      <double>1.000000000000000</double>
+                     </property>
+                     <property name="singleStep">
+                      <double>0.010000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.400000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QGroupBox" name="LimitgroupBox">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                    <horstretch>0</horstretch>
+                    <verstretch>10</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="title">
+                   <string>字符定位限制</string>
+                  </property>
+                  <layout class="QVBoxLayout" name="verticalLayout_13">
+                   <item>
+                    <layout class="QHBoxLayout" name="topLayout">
+                     <item>
+                      <widget class="QLabel" name="LLlabel">
+                       <property name="text">
+                        <string>左侧限制：</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="leftLimit"/>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="RLlabel">
+                       <property name="text">
+                        <string>右侧限制：</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="rightLimit"/>
+                     </item>
+                    </layout>
+                   </item>
+                   <item>
+                    <layout class="QHBoxLayout" name="bottomLayout">
+                     <item>
+                      <widget class="QLabel" name="TLlabel">
+                       <property name="text">
+                        <string>顶部限制：</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="topLimit"/>
+                     </item>
+                     <item>
+                      <widget class="QLabel" name="BLlabel">
+                       <property name="text">
+                        <string>底部限制：</string>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QSpinBox" name="bottomLimit"/>
+                     </item>
+                    </layout>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QGroupBox" name="CWHRgroupBox">
+                <property name="title">
+                 <string>宽/高/宽高比</string>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_14">
+                 <item>
+                  <layout class="QHBoxLayout" name="CWHRTLayout">
+                   <item>
+                    <widget class="QLabel" name="CMinWlabel">
+                     <property name="text">
+                      <string>最小宽度：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="charminWidth">
+                     <property name="maximum">
+                      <number>1000</number>
+                     </property>
+                     <property name="value">
+                      <number>2</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="CMaxWlabel">
+                     <property name="text">
+                      <string>最大宽度：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="charmaxWidth">
+                     <property name="maximum">
+                      <number>1000</number>
+                     </property>
+                     <property name="value">
+                      <number>30</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="CWHRMLayout">
+                   <item>
+                    <widget class="QLabel" name="CMinHlabel">
+                     <property name="text">
+                      <string>最小高度：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="charminHeight">
+                     <property name="maximum">
+                      <number>1000</number>
+                     </property>
+                     <property name="value">
+                      <number>10</number>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="CMaxHlabel">
+                     <property name="text">
+                      <string>最大高度：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QSpinBox" name="charmaxHeight">
+                     <property name="maximum">
+                      <number>1000</number>
+                     </property>
+                     <property name="value">
+                      <number>80</number>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="CWHRBLayout">
+                   <item>
+                    <widget class="QLabel" name="CMinRlabel">
+                     <property name="text">
+                      <string>最小宽高比：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="charminRatio">
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>0.080000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QLabel" name="CMaxRlabel">
+                     <property name="text">
+                      <string>最大宽高比：</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QDoubleSpinBox" name="charmaxRatio">
+                     <property name="maximum">
+                      <double>1000.000000000000000</double>
+                     </property>
+                     <property name="value">
+                      <double>2.000000000000000</double>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+             </layout>
             </widget>
            </widget>
           </widget>

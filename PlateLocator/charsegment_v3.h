@@ -16,6 +16,13 @@ public:
     static cv::Mat ClearMaodingAndBorder(cv::Mat gray, PlateColor plateColor);
     static QList<CharInfo> SplitCharsInPlateMat(cv::Mat plateMat, QList<cv::Rect> rects);
     static QList<CharInfo> SplitPlateForAutoSample(cv::Mat plateMat);
+    static QList<CharInfo> SplitPlateForAutoSampleWithAllPara(cv::Mat plateMat,float gammaFactor = 0.40f,
+                                                              int leftLimit = 0,int rightLimit = 0,
+                                                              int topLimit = 0,int bottomLimit = 0,
+                                                              int minWidth = 2,int maxWidth = 30,
+                                                              int minHeight = 10,int maxHeight = 80,
+                                                              float minRatio = 0.08f,float maxRatio = 2.0f);
+
     static QList<CharInfo> SplitPlateByIndexTransform(cv::Mat originalMat,PlateColor plateColor,
                                                        int leftLimit = 0,int rightLimit = 0,
                                                        int topLimit = 0,int bottomLimit = 0,
@@ -36,6 +43,7 @@ public:
                                                        int bottomLimit = 0,int minWidth = 2,
                                                        int maxWidth = 30,int minHeight = 10,
                                                        int maxHeight = 80,float minRatio = 0.08f,float maxRatio = 2.0f);
+
     static QList<CharInfo> SplitPlateByOriginal(cv::Mat originalMat,cv::Mat plateMat,PlateColor plateColor,
                                                  CharSplitMethod charSplitMethod = CharSplitMethod::原图,
                                                  int leftLimit = 0,int rightLimit = 0,

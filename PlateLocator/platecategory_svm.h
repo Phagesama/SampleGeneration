@@ -22,6 +22,7 @@ public:
     static cv::Size HOGBlockStride;
     static cv::Size HOGCellSize;
     static int HOGNBits;
+    static int HOGSize;
 
     PlateCategory_SVM();
 
@@ -47,6 +48,7 @@ public:
 
     static bool PreparePlateTrainningDirectory(QString path);
 
+    static bool checkTestDirectory(QString path);
 };
 
 #endif // PLATECATEGORY_SVM_H

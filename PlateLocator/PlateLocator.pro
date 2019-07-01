@@ -32,6 +32,8 @@ SOURCES += \
         platechar_svm.cpp \
         platelocator.cpp \
         platelocator_v3.cpp \
+        savechar.cpp \
+        savecharthread.cpp \
         saveimgthread.cpp \
         saveimgwidget.cpp \
         showcharthread.cpp \
@@ -45,6 +47,8 @@ HEADERS += \
         platechar_svm.h \
         platelocator.h \
         platelocator_v3.h \
+        savechar.h \
+        savecharthread.h \
         saveimgthread.h \
         saveimgwidget.h \
         showcharthread.h \
@@ -52,6 +56,7 @@ HEADERS += \
 
 FORMS += \
         platelocator.ui \
+        savechar.ui \
         saveimgwidget.ui
 
 INCLUDEPATH += E:\Software\OpenCv\opencv\build\include

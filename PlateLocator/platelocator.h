@@ -10,10 +10,12 @@
 #include <QTableWidgetItem>
 
 #include "platelocator_v3.h"
+#include "charsegment_v3.h"
 #include "matswitch.h"
 #include "saveimgwidget.h"
 #include "showplatethread.h"
 #include "showcharthread.h"
+#include "savechar.h"
 
 namespace Ui {
 class PlateLocator;
@@ -114,8 +116,39 @@ private slots:
 
     void on_charMoveButton_clicked();
 
+    void on_autoCharButton_clicked();
+
+    void on_GammaFactor_valueChanged(double arg1);
+
+    void on_leftLimit_valueChanged(int arg1);
+
+    void on_rightLimit_valueChanged(int arg1);
+
+    void on_topLimit_valueChanged(int arg1);
+
+    void on_bottomLimit_valueChanged(int arg1);
+
+    void on_charminWidth_valueChanged(int arg1);
+
+    void on_charmaxWidth_valueChanged(int arg1);
+
+    void on_charminHeight_valueChanged(int arg1);
+
+    void on_charmaxHeight_valueChanged(int arg1);
+
+    void on_charminRatio_valueChanged(double arg1);
+
+    void on_charmaxRatio_valueChanged(double arg1);
+
+    void on_autoCharClassify_clicked();
+
+    void on_simpleCharXML_clicked();
+
+    void on_centralTab_currentChanged(int index);
+
 private:
     void updatapara();
+    void charupdatapara();
     void showCutedImage();
     void showSourcePlate();
     void showSegedPlate();
@@ -153,7 +186,19 @@ public:
     int yellowup_H = 40;
     int yellowup_S = 255;
     int yellowup_V = 255;
+    float gammaFactor = 0.40f;
+    int leftLimit = 0;
+    int rightLimit = 0;
+    int topLimit = 0;
+    int bottomLimit = 0;
+    int charminWidth = 2;
+    int charmaxWidth = 30;
+    int charminHeight = 10;
+    int charmaxHeight = 80;
+    float charminRatio = 0.08f;
+    float charmaxRatio = 2.0f;
     SaveImgWidget *saveImgWidget;
+    SaveChar *saveChar;
     ShowPlateThread *showPlateThread = nullptr;
     ShowCharThread *showCharThread = nullptr;
 
@@ -161,6 +206,8 @@ private:
     Ui::PlateLocator *ui;
     bool imgSaved = false;
     bool plateClassified = false;
+    bool charSaved = false;
+    bool charClassified = false;
 };
 
 #endif // PLATELOCATOR_H

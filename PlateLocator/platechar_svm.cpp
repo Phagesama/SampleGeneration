@@ -6,6 +6,8 @@ cv::Size PlateChar_SVM::HOGBlockSize = cv::Size(16, 16);
 cv::Size PlateChar_SVM::HOGBlockStride = cv::Size(8,8);
 cv::Size PlateChar_SVM::HOGCellSize = cv::Size(8, 8);
 int PlateChar_SVM::HOGNBits = 9;
+int PlateChar_SVM::HOGSize = 36 * ((HOGWinSize.width - HOGBlockSize.width) / HOGBlockStride.width + 1) * ((HOGWinSize.height - HOGBlockSize.height) / HOGBlockStride.height + 1);
+
 cv::Ptr<cv::ml::SVM> PlateChar_SVM::svm = nullptr;
 
 PlateChar_SVM::PlateChar_SVM()
@@ -78,7 +80,7 @@ PlateChar PlateChar_SVM::Test(cv::Mat matTest)
     std::vector<float> descriptor = ComputeHogDescriptors(matTest);
     cv::Mat testDescriptor = cv::Mat::zeros(1,descriptor.size(),CV_32FC1);
     for (int i = 0;i < descriptor.size();i++) {
-        testDescriptor.at<uchar>(0,i) = descriptor[i];
+        testDescriptor.at<float>(0,i) = descriptor[i];
     }
     float predict = svm->predict(testDescriptor);
     result = (PlateChar)((int)predict);
@@ -141,4 +143,29 @@ bool PlateChar_SVM::PrepareCharTrainningDirectory(QString path)
         success = false;
     }
     return success;
+}
+
+bool PlateChar_SVM::checkTestDirectory(QString path)
+{
+    QDir dir;
+    try {
+        QString charsDiretory = path + "\\chars";
+        if(dir.exists(charsDiretory) == false)
+        {
+            return false;
+        }
+        for(int index_charCategory = 0; index_charCategory < PlateCharString.size(); index_charCategory++)
+        {
+            QString charDirectory = charsDiretory + "\\" + PlateCharString[index_charCategory];
+            if(dir.exists(charDirectory) == false)
+            {
+                return  false;
+            }
+        }
+
+    } catch (std::exception) {
+        return  false;
+    }
+
+    return true;
 }

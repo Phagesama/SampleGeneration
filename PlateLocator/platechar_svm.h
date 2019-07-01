@@ -21,6 +21,7 @@ public:
     static cv::Size HOGBlockStride;
     static cv::Size HOGCellSize;
     static int HOGNBits;
+    static int HOGSize;
 
     PlateChar_SVM();
 
@@ -46,6 +47,7 @@ public:
 
     static bool PrepareCharTrainningDirectory(QString path);
 
+    static bool checkTestDirectory(QString path);
 };
 
 #endif // PLATECHAR_SVM_H

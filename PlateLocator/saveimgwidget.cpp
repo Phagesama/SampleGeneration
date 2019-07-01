@@ -25,6 +25,7 @@ void SaveImgWidget::updateProgress(int present)
 
 void SaveImgWidget::threadFinished()
 {
+    ui->progressBar->setValue(1000);
     ui->OKButton->setEnabled(true);
 }
 
