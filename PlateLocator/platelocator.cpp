@@ -454,6 +454,7 @@ void PlateLocator::on_autoClassify_clicked()
         }
     }
     plateClassified = true;
+    QMessageBox::about(this,"Auto Classify Result","Finished!");
     ui->fileList->setCurrentRow(0);
     showSourcePlate();
 }
@@ -542,6 +543,7 @@ void PlateLocator::on_simpleXML_clicked()
         }
     }
     plateClassified = true;
+    QMessageBox::about(this,"Auto Classify Result","Finished!");
     ui->fileList->setCurrentRow(0);
     showSourcePlate();
 }
@@ -732,6 +734,7 @@ void PlateLocator::on_autoCharClassify_clicked()
         }
     }
     charClassified = true;
+    QMessageBox::about(this,"Auto Classify Result","Finished!");
     showSourceChar();
 }
 
@@ -815,6 +818,7 @@ void PlateLocator::on_simpleCharXML_clicked()
         }
     }
     charClassified = true;
+    QMessageBox::about(this,"Auto Classify Result","Finished!");
     showSourceChar();
 }
 

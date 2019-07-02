@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QCheckBox>
 #include <QTableWidgetItem>
+#include <QMessageBox>
 
 #include "platelocator_v3.h"
 #include "charsegment_v3.h"
