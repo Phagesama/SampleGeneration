@@ -161,6 +161,7 @@ QList<PlateInfo> PlateLocator_V3::LocatePlatesForAutoSampleWithAllPara(cv::Mat m
     cv::Mat element_Erode = cv::getStructuringElement(cv::MORPH_RECT,cv::Size(3,3));
     cv::Mat threshold_Erode;
     cv::erode(threshold_Close,threshold_Erode,element_Erode);
+    *matProcess = threshold_Erode.clone();
     std::vector<std::vector<cv::Point>> contours;
     std::vector<cv::Vec4i> hierarchys;
     cv::findContours(threshold_Erode,contours,hierarchys,cv::RetrievalModes::RETR_EXTERNAL,cv::ContourApproximationModes::CHAIN_APPROX_NONE);
